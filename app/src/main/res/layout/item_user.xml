@@ -7,19 +7,16 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <!-- Аватарка + статус -->
     <FrameLayout
         android:layout_width="75dp"
         android:layout_height="75dp">
 
-        <!-- Фото пользователя (стандартная иконка приложения) -->
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
             android:src="@mipmap/ic_launcher" />
 
-        <!-- Кружок статуса -->
         <FrameLayout
             android:id="@+id/StateRound"
             android:layout_gravity="bottom|right"
@@ -27,7 +24,6 @@
             android:layout_height="20dp"/>
     </FrameLayout>
 
-    <!-- Текст: имя, превью последнего сообщения, статус -->
     <LinearLayout
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="15dp"

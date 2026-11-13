@@ -16,6 +16,7 @@ class LoadedUserDataActivity : AppCompatActivity() {
 
     private val handler = Handler(Looper.getMainLooper())
     private val goToMainRunnable = Runnable {
+        android.util.Log.e("AUDIO", "Переход на MainActivity")
         startActivity(Intent(this, MainActivity::class.java))
         finish()
     }
@@ -24,49 +25,75 @@ class LoadedUserDataActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_loaded_user_data)
 
+        android.util.Log.e("AUDIO", "LoadedUserDataActivity.onCreate запущен")
+
         imageView = findViewById(R.id.imageForLoaded)
         initAnimation()
         initMediaPlayer()
 
-        // Через 3 секунды переходим на главный экран
-        handler.postDelayed(goToMainRunnable, 3000)
+        // 10 секунд вместо 3 — для диагностики (потом верните 3000)
+        handler.postDelayed(goToMainRunnable, 10000)
     }
 
     private fun initAnimation() {
         val animation = AnimationUtils.loadAnimation(this, R.anim.logo_rotate_animation)
         imageView.startAnimation(animation)
+        android.util.Log.e("AUDIO", "Анимация запущена")
     }
 
     private fun initMediaPlayer() {
-        // Если файла noise.mp3 нет — просто не запускаем музыку, чтобы не крашилось
         try {
+            android.util.Log.e("AUDIO", "Попытка создать MediaPlayer из R.raw.noise")
             mPlayer = MediaPlayer.create(this, R.raw.noise)
-            mPlayer?.setVolume(0.2f, 0.2f)
+
+            if (mPlayer == null) {
+                android.util.Log.e("AUDIO", "ОШИБКА: MediaPlayer.create вернул null — файл не найден или битый")
+                return
+            }
+
+            android.util.Log.e("AUDIO", "Файл найден. Длительность = ${mPlayer?.duration} мс")
+            android.util.Log.e("AUDIO", "Громкость до установки: ${mPlayer?.duration}")
+
+            mPlayer?.setVolume(1.0f, 1.0f) // 100% громкость
             mPlayer?.isLooping = true
             mPlayer?.start()
+
+            android.util.Log.e("AUDIO", "Звук запущен. isPlaying = ${mPlayer?.isPlaying}")
+            android.util.Log.e("AUDIO", "isLooping = ${mPlayer?.isLooping}")
+
         } catch (e: Exception) {
-            android.util.Log.e("AUDIO", "Ошибка запуска звука: ${e.message}")
+            android.util.Log.e("AUDIO", "ИСКЛЮЧЕНИЕ при запуске: ${e.message}")
+            e.printStackTrace()
         }
     }
 
     override fun onPause() {
         super.onPause()
-        if (mPlayer?.isPlaying == true) mPlayer?.pause()
+        android.util.Log.e("AUDIO", "onPause вызван")
+        if (mPlayer?.isPlaying == true) {
+            mPlayer?.pause()
+            android.util.Log.e("AUDIO", "Звук поставлен на паузу")
+        }
     }
 
     override fun onResume() {
         super.onResume()
-        if (mPlayer != null && mPlayer?.isPlaying == false) mPlayer?.start()
+        android.util.Log.e("AUDIO", "onResume вызван")
+        if (mPlayer != null && mPlayer?.isPlaying == false) {
+            mPlayer?.start()
+            android.util.Log.e("AUDIO", "Звук возобновлён")
+        }
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        // Убираем таймер, чтобы не запускался, если пользователь закрыл экран раньше
+        android.util.Log.e("AUDIO", "onDestroy вызван")
         handler.removeCallbacks(goToMainRunnable)
         if (mPlayer != null) {
             if (mPlayer!!.isPlaying) mPlayer!!.stop()
             mPlayer!!.release()
             mPlayer = null
+            android.util.Log.e("AUDIO", "MediaPlayer освобождён")
         }
     }
 }

@@ -6,6 +6,6 @@ data class User(
     var state: String = "",
     var age: Int = 0,
     var stateSignal: Int = 0,
-    var lastMessage: String = "",       // Текст превью (например, "Фото")
-    var lastMessageType: String = ""    // Тип: text, image, audio, file
+    var lastMessage: String = "",
+    var lastMessageType: String = ""
 )

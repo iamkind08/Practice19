@@ -17,7 +17,6 @@ class UserActivity : AppCompatActivity() {
     private lateinit var messageTypeSpinner: Spinner
     private lateinit var activeUser: User
 
-    // Типы сообщений (для Spinner)
     private val messageTypes = listOf("Текст", "Фото", "Аудиосообщение", "Файл")
     private val typeKeys = listOf("text", "image", "audio", "file")
 
@@ -34,25 +33,21 @@ class UserActivity : AppCompatActivity() {
         lastMessageEditText = findViewById(R.id.LastMessageEditText)
         messageTypeSpinner = findViewById(R.id.MessageTypeSpinner)
 
-        // Настраиваем Spinner
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, messageTypes)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         messageTypeSpinner.adapter = adapter
 
-        // Заполняем поля текущими данными
         nameTextView.setText(activeUser.name)
         stateTextView.setText(activeUser.state)
         ageTextView.setText(activeUser.age.toString())
 
-        // Устанавливаем текущий тип в Spinner
         val idx = typeKeys.indexOf(activeUser.lastMessageType)
         if (idx >= 0) messageTypeSpinner.setSelection(idx)
 
-        // Устанавливаем текущий текст/имя файла (без префиксов "Фото" и т.п.)
         lastMessageEditText.setText(
             when (activeUser.lastMessageType) {
-                "image" -> ""                        // для фото текст не нужен
-                "audio" -> ""                        // для аудио тоже
+                "image" -> ""
+                "audio" -> ""
                 "file" -> activeUser.lastMessage.replace("Файл: ", "")
                 else -> activeUser.lastMessage
             }
@@ -74,7 +69,6 @@ class UserActivity : AppCompatActivity() {
             else -> 0
         }
 
-        // Формируем превью последнего сообщения
         val selectedTypeIndex = messageTypeSpinner.selectedItemPosition
         val selectedTypeKey = typeKeys[selectedTypeIndex]
         val userInput = lastMessageEditText.text.toString().trim()
@@ -86,7 +80,6 @@ class UserActivity : AppCompatActivity() {
             else -> userInput.ifEmpty { "Нет сообщений" }
         }
 
-        // 1. Обновляем локальный объект
         activeUser.name = newName
         activeUser.state = newState
         activeUser.age = newAge
@@ -94,7 +87,6 @@ class UserActivity : AppCompatActivity() {
         activeUser.lastMessage = lastMessage
         activeUser.lastMessageType = selectedTypeKey
 
-        // 2. Сохраняем в Firebase
         val db = FirebaseDatabase.getInstance()
         val profileRef = db.getReference("UsersProfileInfo").child(activeUser.profileId)
 

@@ -32,7 +32,7 @@ class SignActivity : AppCompatActivity() {
 
         initViews()
         setupTabs()
-        // checkSignInInfo() УДАЛЁН — поля всегда пустые
+
     }
 
     private fun initViews() {
@@ -142,7 +142,6 @@ class SignActivity : AppCompatActivity() {
     }
 
     private fun goNext(profileId: String) {
-        // Больше не сохраняем логин/пароль в SharedPreferences
         val intent = Intent(this, LoadedUserDataActivity::class.java)
         intent.putExtra("PROFILE_ID", profileId)
         startActivity(intent)

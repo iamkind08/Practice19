@@ -5,7 +5,6 @@
     android:orientation="vertical"
     android:padding="20dp">
 
-    <!-- Вкладки (Вход / Регистрация) -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -24,7 +23,6 @@
             android:layout_height="wrap_content"/>
     </LinearLayout>
 
-    <!-- Блок Вход -->
     <LinearLayout
         android:id="@+id/layoutSignIn"
         android:layout_width="match_parent"
@@ -36,7 +34,6 @@
         <Button android:onClick="signIn" android:text="Войти" android:layout_width="match_parent" android:layout_height="wrap_content"/>
     </LinearLayout>
 
-    <!-- Блок Регистрация -->
     <LinearLayout
         android:id="@+id/layoutSignUp"
         android:layout_width="match_parent"

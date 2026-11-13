@@ -1,19 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <set xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- Сдвиг вправо -->
     <translate
         android:fromXDelta="-3%"
         android:toXDelta="3%"
         android:duration="300" />
 
-    <!-- Сдвиг влево -->
     <translate
         android:fromXDelta="3%"
         android:toXDelta="-3%"
         android:startOffset="300"
         android:duration="300" />
 
-    <!-- Возврат в исходное положение -->
     <translate
         android:fromXDelta="-3%"
         android:toXDelta="0%"

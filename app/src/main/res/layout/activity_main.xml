@@ -8,7 +8,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <!-- Список пользователей -->
         <ListView
             android:id="@+id/listView"
             android:layout_weight="1"
@@ -16,20 +15,17 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"/>
 
-        <!-- Правая часть -->
         <FrameLayout
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="match_parent">
 
-            <!-- Текст-заглушка -->
             <TextView
                 android:layout_gravity="center"
                 android:text="Выберите пользователя"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
-            <!-- Панель пользователя -->
             <FrameLayout
                 android:id="@+id/userPanel"
                 android:visibility="gone"
@@ -37,7 +33,6 @@
                 android:layout_height="match_parent"
                 android:background="@android:color/white">
 
-                <!-- Кнопка Назад -->
                 <Button
                     android:onClick="backToList"
                     android:text="←"
@@ -46,7 +41,6 @@
                     android:layout_width="50dp"
                     android:layout_height="50dp" />
 
-                <!-- Кнопка Редактировать -->
                 <Button
                     android:onClick="editUser"
                     android:text="✎"
@@ -56,7 +50,6 @@
                     android:layout_width="50dp"
                     android:layout_height="50dp" />
 
-                <!-- Кнопка Выйти -->
                 <Button
                     android:onClick="logout"
                     android:text="Выйти"
@@ -66,7 +59,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="50dp" />
 
-                <!-- Данные пользователя -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -95,7 +87,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"/>
 
-                    <!-- Превью последнего сообщения на панели -->
                     <TextView
                         android:id="@+id/LastMessageTextView"
                         android:textSize="14sp"

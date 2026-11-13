@@ -44,7 +44,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
-        <!-- Заголовок для блока "Последнее сообщение" -->
         <TextView
             android:text="Последнее сообщение:"
             android:textStyle="bold"
@@ -52,14 +51,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
-        <!-- Тип сообщения -->
         <Spinner
             android:id="@+id/MessageTypeSpinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"/>
 
-        <!-- Текст / имя файла -->
         <EditText
             android:id="@+id/LastMessageEditText"
             android:hint="Текст или имя файла (например, договор.pdf)"
