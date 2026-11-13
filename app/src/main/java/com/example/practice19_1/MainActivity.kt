@@ -10,6 +10,7 @@ import android.widget.FrameLayout
 import android.widget.ListView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.database.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -26,15 +27,16 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        UserStaticInfo
-
         init()
+        loadUsersFromFirebase()
     }
 
     override fun onResume() {
         super.onResume()
-        if (::userListAdapter.isInitialized) {
-            userListAdapter.notifyDataSetChanged()
+        if (::userListAdapter.isInitialized) userListAdapter.notifyDataSetChanged()
+
+        if (userPanel.visibility == View.VISIBLE && positionActiveUser < UserStaticInfo.users.size) {
+            initPanel(UserStaticInfo.users[positionActiveUser])
         }
     }
 
@@ -47,6 +49,42 @@ class MainActivity : AppCompatActivity() {
 
         userListAdapter = UserListAdapter()
         listView.adapter = userListAdapter
+    }
+
+    private fun loadUsersFromFirebase() {
+        val db = FirebaseDatabase.getInstance()
+        db.getReference("UsersProfileInfo")
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    UserStaticInfo.users.clear()
+                    for (child in snapshot.children) {
+                        val profileId = child.key ?: continue
+                        val name = child.child("name").getValue(String::class.java) ?: ""
+                        val state = child.child("state").getValue(String::class.java) ?: ""
+                        val age = child.child("age").getValue(Int::class.java) ?: 0
+
+                        // Читаем сохранённый сигнал; если его нет — определяем по тексту
+                        val savedSignal = child.child("stateSignal").getValue(Int::class.java)
+                        val signal = savedSignal ?: when {
+                            state.contains("online", ignoreCase = true) -> 1
+                            state.contains("away", ignoreCase = true) ||
+                                    state.contains("departed", ignoreCase = true) -> 2
+                            else -> 0
+                        }
+
+                        UserStaticInfo.users.add(User(profileId, name, state, age, signal))
+                    }
+                    userListAdapter.notifyDataSetChanged()
+
+                    if (userPanel.visibility == View.VISIBLE && positionActiveUser < UserStaticInfo.users.size) {
+                        initPanel(UserStaticInfo.users[positionActiveUser])
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    android.util.Log.e("FIREBASE", "Ошибка загрузки: ${error.message}")
+                }
+            })
     }
 
     fun backToList(view: View) {
@@ -70,9 +108,7 @@ class MainActivity : AppCompatActivity() {
         private val inflater = LayoutInflater.from(this@MainActivity)
 
         override fun getCount(): Int = UserStaticInfo.users.size
-
         override fun getItem(position: Int): User = UserStaticInfo.users[position]
-
         override fun getItemId(position: Int): Long = position.toLong()
 
         override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
@@ -87,9 +123,9 @@ class MainActivity : AppCompatActivity() {
             stateView.text = currentUser.state
 
             when (currentUser.stateSignal) {
-                0 -> stateRound.setBackgroundColor(0xFFCFCFCF.toInt()) // Офлайн (серый)
-                1 -> stateRound.setBackgroundColor(0xFF00FF00.toInt()) // Онлайн (зеленый)
-                2 -> stateRound.setBackgroundColor(0xFFFF0000.toInt()) // Отошел (красный)
+                0 -> stateRound.setBackgroundColor(0xFFCFCFCF.toInt()) // офлайн — серый
+                1 -> stateRound.setBackgroundColor(0xFF00FF00.toInt()) // онлайн — зелёный
+                2 -> stateRound.setBackgroundColor(0xFFFF0000.toInt()) // отошёл — красный
             }
 
             view.setOnClickListener {

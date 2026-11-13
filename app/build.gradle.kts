@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
+    // ОБЯЗАТЕЛЬНО: Добавляем плагин Google Services для Firebase
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -36,6 +38,7 @@ android {
 }
 
 dependencies {
+    // --- Compose и стандартные библиотеки ---
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.compose.material3)
@@ -44,6 +47,17 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
+
+    // --- Библиотеки для работы с обычными XML экранами (Активности) ---
+    implementation("androidx.appcompat:appcompat:1.6.1")
+    implementation("com.google.android.material:material:1.11.0") // Для тем Material
+    implementation("androidx.fragment:fragment-ktx:1.6.2") // Для AnimImageFragment
+
+    // --- Firebase (Очищено от дублей) ---
+    implementation(platform("com.google.firebase:firebase-bom:33.7.0")) // Используем одну актуальную версию
+    implementation("com.google.firebase:firebase-database")
+
+    // --- Тесты ---
     testImplementation(libs.junit)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
@@ -51,5 +65,4 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     debugImplementation(libs.androidx.compose.ui.tooling)
-    implementation("androidx.appcompat:appcompat:1.6.1")
 }

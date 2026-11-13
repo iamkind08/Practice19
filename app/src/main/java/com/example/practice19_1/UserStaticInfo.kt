@@ -6,10 +6,11 @@ object UserStaticInfo {
 
     init {
         if (users.isEmpty()) {
-            users.add(User("Иван", "Я усталь", 19, 0))
-            users.add(User("Иван", "Я усталь", 19, 1))
-            users.add(User("Иван", "Я усталь", 19, 2))
-            users.add(User("Иван", "Я усталь", 19, 0))
+            // Используем именованные аргументы, чтобы не путаться в порядке
+            users.add(User(name = "Иван", state = "Я усталь", age = 19, stateSignal = 0))
+            users.add(User(name = "Иван", state = "Я усталь", age = 19, stateSignal = 1))
+            users.add(User(name = "Иван", state = "Я усталь", age = 19, stateSignal = 2))
+            users.add(User(name = "Иван", state = "Я усталь", age = 19, stateSignal = 0))
         }
     }
 }

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <!-- Вкладки (Вход / Регистрация) -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/btnTabSignIn"
+            android:text="Вход"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"/>
+        <Button
+            android:id="@+id/btnTabSignUp"
+            android:text="Регистрация"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+    <!-- Блок Вход -->
+    <LinearLayout
+        android:id="@+id/layoutSignIn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="20dp">
+        <EditText android:id="@+id/LoginTextView" android:hint="Логин" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+        <EditText android:id="@+id/PasswordTextView" android:hint="Пароль" android:inputType="textPassword" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+        <Button android:onClick="signIn" android:text="Войти" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+    <!-- Блок Регистрация -->
+    <LinearLayout
+        android:id="@+id/layoutSignUp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:layout_marginTop="20dp">
+        <EditText android:id="@+id/NewLoginTextView" android:hint="Логин" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+        <EditText android:id="@+id/NewPasswordTextView" android:hint="Пароль" android:inputType="textPassword" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+        <EditText android:id="@+id/NewNameTextView" android:hint="Имя" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+        <EditText android:id="@+id/NewAgeTextView" android:hint="Возраст" android:inputType="number" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+        <EditText android:id="@+id/NewStateTextView" android:hint="Статус" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+        <Button android:onClick="signUp" android:text="Зарегистрироваться" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+    </LinearLayout>
+</LinearLayout>
