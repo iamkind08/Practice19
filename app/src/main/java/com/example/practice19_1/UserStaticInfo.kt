@@ -6,11 +6,14 @@ object UserStaticInfo {
 
     init {
         if (users.isEmpty()) {
-            // Используем именованные аргументы, чтобы не путаться в порядке
-            users.add(User(name = "Иван", state = "Я усталь", age = 19, stateSignal = 0))
-            users.add(User(name = "Иван", state = "Я усталь", age = 19, stateSignal = 1))
-            users.add(User(name = "Иван", state = "Я усталь", age = 19, stateSignal = 2))
-            users.add(User(name = "Иван", state = "Я усталь", age = 19, stateSignal = 0))
+            users.add(User(name = "Иван", state = "online", age = 19, stateSignal = 1,
+                lastMessage = "Фото", lastMessageType = "image"))
+            users.add(User(name = "Иван", state = "offline", age = 19, stateSignal = 0,
+                lastMessage = "Привет, как дела?", lastMessageType = "text"))
+            users.add(User(name = "Иван", state = "away", age = 19, stateSignal = 2,
+                lastMessage = "Аудиосообщение", lastMessageType = "audio"))
+            users.add(User(name = "Иван", state = "offline", age = 19, stateSignal = 0,
+                lastMessage = "Файл: договор.pdf", lastMessageType = "file"))
         }
     }
 }

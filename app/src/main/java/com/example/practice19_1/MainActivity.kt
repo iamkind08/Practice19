@@ -19,6 +19,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var nameTextView: TextView
     private lateinit var stateTextView: TextView
     private lateinit var ageTextView: TextView
+    private lateinit var lastMessageTextView: TextView // для панели
 
     private lateinit var userListAdapter: UserListAdapter
     private var positionActiveUser = 0
@@ -34,7 +35,6 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         if (::userListAdapter.isInitialized) userListAdapter.notifyDataSetChanged()
-
         if (userPanel.visibility == View.VISIBLE && positionActiveUser < UserStaticInfo.users.size) {
             initPanel(UserStaticInfo.users[positionActiveUser])
         }
@@ -45,6 +45,7 @@ class MainActivity : AppCompatActivity() {
         nameTextView = findViewById(R.id.NameTextView)
         stateTextView = findViewById(R.id.StateTextView)
         ageTextView = findViewById(R.id.AgeTextView)
+        lastMessageTextView = findViewById(R.id.LastMessageTextView)
         listView = findViewById(R.id.listView)
 
         userListAdapter = UserListAdapter()
@@ -62,20 +63,20 @@ class MainActivity : AppCompatActivity() {
                         val name = child.child("name").getValue(String::class.java) ?: ""
                         val state = child.child("state").getValue(String::class.java) ?: ""
                         val age = child.child("age").getValue(Int::class.java) ?: 0
-
-                        // Читаем сохранённый сигнал; если его нет — определяем по тексту
                         val savedSignal = child.child("stateSignal").getValue(Int::class.java)
                         val signal = savedSignal ?: when {
-                            state.contains("online", ignoreCase = true) -> 1
-                            state.contains("away", ignoreCase = true) ||
-                                    state.contains("departed", ignoreCase = true) -> 2
+                            state.contains("online", true) -> 1
+                            state.contains("away", true) || state.contains("departed", true) -> 2
                             else -> 0
                         }
+                        val lastMessage = child.child("lastMessage").getValue(String::class.java) ?: ""
+                        val lastMessageType = child.child("lastMessageType").getValue(String::class.java) ?: ""
 
-                        UserStaticInfo.users.add(User(profileId, name, state, age, signal))
+                        UserStaticInfo.users.add(
+                            User(profileId, name, state, age, signal, lastMessage, lastMessageType)
+                        )
                     }
                     userListAdapter.notifyDataSetChanged()
-
                     if (userPanel.visibility == View.VISIBLE && positionActiveUser < UserStaticInfo.users.size) {
                         initPanel(UserStaticInfo.users[positionActiveUser])
                     }
@@ -97,10 +98,21 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
+    fun logout(view: View) {
+        val sp = getSharedPreferences(Transform.APP_PREFERENCES, MODE_PRIVATE)
+        sp.edit().clear().apply()
+        val intent = Intent(this, SignActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
+        finish()
+    }
+
     private fun initPanel(item: User) {
         nameTextView.text = item.name
         stateTextView.text = item.state
         ageTextView.text = item.age.toString()
+        // Превью последнего сообщения на панели
+        lastMessageTextView.text = item.lastMessage
         userPanel.visibility = View.VISIBLE
     }
 
@@ -117,15 +129,17 @@ class MainActivity : AppCompatActivity() {
 
             val nameView = view.findViewById<TextView>(R.id.NameTextView)
             val stateView = view.findViewById<TextView>(R.id.StateTextView)
+            val lastMessageView = view.findViewById<TextView>(R.id.LastMessageTextView)
             val stateRound = view.findViewById<FrameLayout>(R.id.StateRound)
 
             nameView.text = currentUser.name
             stateView.text = currentUser.state
+            lastMessageView.text = currentUser.lastMessage
 
             when (currentUser.stateSignal) {
-                0 -> stateRound.setBackgroundColor(0xFFCFCFCF.toInt()) // офлайн — серый
-                1 -> stateRound.setBackgroundColor(0xFF00FF00.toInt()) // онлайн — зелёный
-                2 -> stateRound.setBackgroundColor(0xFFFF0000.toInt()) // отошёл — красный
+                0 -> stateRound.setBackgroundColor(0xFFCFCFCF.toInt())
+                1 -> stateRound.setBackgroundColor(0xFF00FF00.toInt())
+                2 -> stateRound.setBackgroundColor(0xFFFF0000.toInt())
             }
 
             view.setOnClickListener {
